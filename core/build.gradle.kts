@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.core"
+    namespace = "redcom1988.core"
     compileSdk = 36
 
     defaultConfig {

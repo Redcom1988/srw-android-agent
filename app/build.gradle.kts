@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.androidstarter"
+    namespace = "redcom1988"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.example.androidstarter"
+        applicationId = "redcom1988"
         minSdk = 26
         targetSdk = 36
         versionCode = 1

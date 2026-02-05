@@ -19,7 +19,7 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Android Starter"
+rootProject.name = "srwagent"
 include(":app")
 include(":core")
 include(":data")
