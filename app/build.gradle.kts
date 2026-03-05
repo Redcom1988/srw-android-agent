@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "redcom1988"
+    namespace = "com.redcom1988"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "redcom1988"
+        applicationId = "com.redcom1988"
         minSdk = 26
         targetSdk = 36
         versionCode = 1
@@ -28,8 +28,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     buildFeatures {
         compose = true
