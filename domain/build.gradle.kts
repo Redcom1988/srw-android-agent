@@ -31,6 +31,7 @@ android {
 }
 
 dependencies {
+    api(project(":core"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -38,6 +39,9 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    // Paging 3
+    implementation(libs.androidx.paging.runtime)
 
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.android)

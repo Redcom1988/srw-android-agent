@@ -42,11 +42,18 @@ dependencies {
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.android)
 
+    // OkHttp core is exposed via NetworkHelper.client property and extension functions
+    // Data layer needs direct access to OkHttp types (Response, Request, Headers, etc.)
     api(libs.okhttp.core)
-    api(libs.okhttp.logging)
-    api(libs.okhttp.brotli)
-    api(libs.okhttp.dnsoverhttps)
-    api(libs.okio)
+    
+    // These are only used internally by NetworkHelper, not exposed in public API
+    implementation(libs.okhttp.logging)
+    implementation(libs.okhttp.brotli)
+    implementation(libs.okhttp.dnsoverhttps)
+    
+    // Serialization types are used in extension functions (parseAs, json object)
+    // Data layer uses these for JSON encoding/decoding
     api(libs.serialization.json)
     api(libs.serialization.json.okio)
+    api(libs.okio)
 }

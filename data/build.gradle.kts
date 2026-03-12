@@ -44,7 +44,16 @@ dependencies {
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.android)
 
+    // Paging 3
+    implementation(libs.androidx.paging.runtime)
+
     implementation(project(":core"))
     implementation(project(":domain"))
 
+    implementation(libs.okhttp.core)
+    implementation(libs.okhttp.logging)
+    implementation(libs.okhttp.brotli)
+
+    debugImplementation(libs.chucker)
+    releaseImplementation(libs.chucker.release)
 }
