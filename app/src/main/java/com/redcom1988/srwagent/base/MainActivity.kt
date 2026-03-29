@@ -13,29 +13,25 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.core.util.Consumer
-import androidx.lifecycle.lifecycleScope
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.core.stack.StackEvent
 import cafe.adriel.voyager.navigator.Navigator
 import cafe.adriel.voyager.navigator.NavigatorDisposeBehavior
 import cafe.adriel.voyager.transitions.ScreenTransition
-import com.redcom1988.domain.auth.interactor.RefreshToken
-import com.redcom1988.domain.auth.repository.TokenStorage
+import com.redcom1988.core.network.NetworkPreference
 import com.redcom1988.srwagent.screens.home.HomeScreen
 import com.redcom1988.srwagent.screens.login.LoginScreen
 import com.redcom1988.srwagent.theme.AppTheme
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
 import soup.compose.material.motion.animation.materialSharedAxisX
 import soup.compose.material.motion.animation.rememberSlideDistance
 
 class MainActivity : ComponentActivity() {
 
-    private val tokenStorage: TokenStorage by inject()
-    private val refreshToken: RefreshToken by inject()
+    private val networkPreference: NetworkPreference by inject()
 
     private var isReady = false
     private var initialScreen: Screen = LoginScreen
@@ -87,25 +83,14 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun handlePreDraw() {
-        lifecycleScope.launch {
-            val existingRefreshToken = tokenStorage.getRefreshToken()
+        val accessToken = networkPreference.accessToken().get()
 
-            if (existingRefreshToken.isNullOrEmpty()) {
-                initialScreen = LoginScreen
-            } else {
-                when (val result = refreshToken.await()) {
-                    is RefreshToken.Result.Success -> {
-                        initialScreen = HomeScreen
-                    }
-                    is RefreshToken.Result.Error -> {
-                        tokenStorage.clearTokens()
-                        initialScreen = LoginScreen
-                    }
-                }
-            }
-
-            isReady = true
+        initialScreen = if (accessToken.isEmpty()) {
+            LoginScreen
+        } else {
+            HomeScreen
         }
+        isReady = true
     }
 
     @Composable

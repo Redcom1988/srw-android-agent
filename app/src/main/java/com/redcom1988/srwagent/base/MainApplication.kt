@@ -11,6 +11,7 @@ import com.redcom1988.core.di.coreModule
 import com.redcom1988.core.network.NetworkHelper
 import com.redcom1988.data.di.dataModule
 import com.redcom1988.domain.di.domainModule
+import com.redcom1988.srwagent.di.appModule
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.component.KoinComponent
@@ -52,6 +53,7 @@ class MainApplication: Application(), SingletonImageLoader.Factory, KoinComponen
                     coreModule,
                     dataModule,
                     domainModule,
+                    appModule,
                 )
             )
         }

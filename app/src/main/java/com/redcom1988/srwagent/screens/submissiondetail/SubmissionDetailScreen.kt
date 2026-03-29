@@ -23,9 +23,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.BrokenImage
+import androidx.compose.material.icons.filled.Language
 import androidx.compose.material.icons.filled.LocalShipping
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
@@ -63,6 +63,7 @@ import com.redcom1988.domain.submission.model.Submission
 import com.redcom1988.domain.submission.model.SubmissionStatus
 import com.redcom1988.srwagent.components.AppBar
 import com.redcom1988.srwagent.components.StatusBadge
+import com.redcom1988.srwagent.screens.map.MapRoutingScreen
 import com.redcom1988.srwagent.screens.submissionimages.SubmissionImagesScreen
 import com.redcom1988.srwagent.util.formatLastUpdated
 import com.redcom1988.srwagent.util.toReadableStatus
@@ -112,6 +113,9 @@ data class SubmissionDetailScreen(
                     context.startActivity(browserIntent)
                 }
             },
+            onNavigateToRoute = { lat, lng, address ->
+                navigator.push(MapRoutingScreen(lat, lng, address))
+            },
             onFinishPickup = { notes ->
                 screenModel.finishPickup(submission.id, notes)
             },
@@ -128,6 +132,7 @@ private fun SubmissionDetailScreenContent(
     onNavigateUp: () -> Unit,
     onViewImages: (Submission, Int) -> Unit,
     onOpenInMaps: (String) -> Unit,
+    onNavigateToRoute: (Double, Double, String?) -> Unit,
     onFinishPickup: (String?) -> Unit,
     snackbarHostState: SnackbarHostState
 ) {
@@ -151,16 +156,22 @@ private fun SubmissionDetailScreenContent(
             ) {
                 HorizontalDivider()
                 OutlinedButton(
-                    onClick = { onOpenInMaps(submission.pickupLocation!!) },
-                    modifier = Modifier.fillMaxWidth()
+                    onClick = {
+                        val lat = submission.submissionLatitude?.toDouble() ?: 0.0
+                        val lng = submission.submissionLongitude?.toDouble() ?: 0.0
+                        val address = submission.submissionAddress
+                        onNavigateToRoute(lat, lng, address)
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    enabled = !submission.submissionAddress.isNullOrBlank()
                 ) {
                     Icon(
-                        imageVector = Icons.Default.Map,
+                        imageVector = Icons.Default.Language,
                         contentDescription = null,
                         modifier = Modifier.size(18.dp)
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    Text("Open in Maps")
+                    Text("Navigate to Location")
                 }
                 if (submission.status == SubmissionStatus.ASSIGNED) {
                     Button(
@@ -259,7 +270,8 @@ private fun SubmissionDetailScreenContent(
             }
 
             // Row: Location icon + Pickup Location
-            if (!submission.pickupLocation.isNullOrBlank())
+            val pickupAddress = submission.submissionAddress
+            if (!pickupAddress.isNullOrBlank())
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -281,7 +293,7 @@ private fun SubmissionDetailScreenContent(
                             fontWeight = FontWeight.Bold
                         )
                         Text(
-                            text = submission.pickupLocation!!,
+                            text = pickupAddress,
                             style = MaterialTheme.typography.bodyLarge,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )

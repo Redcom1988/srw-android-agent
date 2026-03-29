@@ -1,5 +1,6 @@
 [versions]
 agp = "8.12.1"
+gson = "2.10.1"
 kotlin = "2.2.10"
 coreKtx = "1.17.0"
 junit = "4.13.2"
@@ -23,9 +24,14 @@ material = "1.12.0"
 pagingruntime = "3.3.6"
 pagingcompose = "3.4.0-alpha04"
 chucker = "4.2.0"
+maps = "4.3.0"
+playServicesMaps = "19.0.0"
+playServicesLocation = "21.3.0"
+accompanist = "0.34.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -68,6 +74,11 @@ androidx-paging-compose = { module = "androidx.paging:paging-compose", version.r
 # chucker
 chucker = { module = "com.github.chuckerteam.chucker:library", version.ref = "chucker" }
 chucker-release = { module = "com.github.chuckerteam.chucker:library-no-op", version.ref = "chucker" }
+
+maps-compose = { module = "com.google.maps.android:maps-compose", version.ref = "maps" }
+play-services-maps = { module = "com.google.android.gms:play-services-maps", version.ref = "playServicesMaps" }
+play-services-location = { module = "com.google.android.gms:play-services-location", version.ref = "playServicesLocation" }
+accompanist-permissions = { module = "com.google.accompanist:accompanist-permissions", version.ref = "accompanist" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

@@ -274,9 +274,10 @@ object HomeScreen: Screen {
                     fontWeight = FontWeight.Bold
                 )
 
-                if (!submission.pickupLocation.isNullOrBlank()) {
+                val address = submission.submissionAddress
+                if (!address.isNullOrBlank()) {
                     Text(
-                        text = submission.pickupLocation!!,
+                        text = address,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                         maxLines = 2
