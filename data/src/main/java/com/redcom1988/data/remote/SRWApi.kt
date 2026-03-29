@@ -8,13 +8,9 @@ import com.redcom1988.core.network.await
 import com.redcom1988.core.network.json
 import com.redcom1988.data.remote.model.auth.AuthRequest
 import com.redcom1988.data.remote.model.submission.PickupRequest
-import okhttp3.Headers
 import okhttp3.MediaType.Companion.toMediaType
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
-import java.io.File
 
 class SRWApi(
     private val networkHelper: NetworkHelper,
@@ -73,12 +69,15 @@ class SRWApi(
         id: Int,
         notes: String?
     ): Response {
+        val url = preference.baseUrl().get() + "/agents/submissions/$id/pickup"
+        
         val requestBody = json.encodeToString(PickupRequest(notes = notes))
             .toRequestBody("application/json".toMediaType())
 
         return networkHelper.client.newCall(
             POST(
-                url = preference.baseUrl().get() + "/agents/submissions/$id/pickup"
+                url = url,
+                body = requestBody
             )
         ).await()
     }

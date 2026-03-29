@@ -23,7 +23,7 @@ class SubmissionDetailScreenModel(
     private val _uiState = MutableStateFlow(SubmissionDetailUiState())
     val uiState: StateFlow<SubmissionDetailUiState> = _uiState.asStateFlow()
 
-    fun finishPickup(submissionId: Int, notes: String?) {
+    fun completePickup(submissionId: Int, notes: String?) {
         screenModelScope.launch(Dispatchers.IO) {
             _uiState.value = _uiState.value.copy(isLoading = true, error = null)
 

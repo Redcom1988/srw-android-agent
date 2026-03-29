@@ -49,9 +49,11 @@ import com.redcom1988.domain.submission.model.Submission
 import com.redcom1988.srwagent.components.AppBar
 import com.redcom1988.srwagent.components.StatusBadge
 import com.redcom1988.srwagent.screens.login.LoginScreen
+import com.redcom1988.srwagent.screens.submissiondetail.PickupResult
+import com.redcom1988.srwagent.screens.submissiondetail.PickupResultBus
 import com.redcom1988.srwagent.screens.submissiondetail.SubmissionDetailScreen
 import com.redcom1988.srwagent.util.formatLastUpdated
-import com.redcom1988.srwagent.util.toReadableStatus
+import kotlinx.coroutines.flow.collectLatest
 import kotlin.time.ExperimentalTime
 
 object HomeScreen: Screen {
@@ -63,6 +65,14 @@ object HomeScreen: Screen {
         val screenModel = rememberScreenModel { HomeScreenModel() }
         val lazyPagingItems = screenModel.submissionsPagingData.collectAsLazyPagingItems()
         val uiState by screenModel.uiState.collectAsState()
+
+        LaunchedEffect(Unit) {
+            PickupResultBus.events.collectLatest { result ->
+                if (result is PickupResult.Success) {
+                    lazyPagingItems.refresh()
+                }
+            }
+        }
 
         HomeScreenContent(
             lazyPagingItems = lazyPagingItems,
@@ -184,7 +194,9 @@ object HomeScreen: Screen {
                                 if (submission != null) {
                                     SubmissionCard(
                                         submission = submission,
-                                        onClick = { navigator.push(SubmissionDetailScreen(submission)) }
+                                        onClick = {
+                                            navigator.push(SubmissionDetailScreen(submission))
+                                        }
                                     )
                                 }
                             }

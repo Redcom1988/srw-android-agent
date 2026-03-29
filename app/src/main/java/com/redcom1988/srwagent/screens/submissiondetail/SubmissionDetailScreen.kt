@@ -55,6 +55,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import cafe.adriel.voyager.core.model.rememberScreenModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.currentOrThrow
@@ -69,20 +70,46 @@ import com.redcom1988.srwagent.util.formatLastUpdated
 import com.redcom1988.srwagent.util.toReadableStatus
 import kotlin.time.ExperimentalTime
 import androidx.core.net.toUri
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.launch
+
+sealed class PickupResult {
+    data object Success : PickupResult()
+}
+
+object PickupResultBus {
+    private val _events = MutableSharedFlow<PickupResult>(replay = 1)
+    val events: SharedFlow<PickupResult> = _events
+    
+    suspend fun emit(result: PickupResult) {
+        _events.emit(result)
+    }
+    
+    fun reset() {
+        // Reset replay cache
+    }
+}
 
 data class SubmissionDetailScreen(
     val submission: Submission
 ) : Screen {
 
+    @OptIn(DelicateCoroutinesApi::class)
     @Composable
     override fun Content() {
         val navigator = LocalNavigator.currentOrThrow
-        val screenModel = remember { SubmissionDetailScreenModel() }
+        val screenModel = rememberScreenModel { SubmissionDetailScreenModel() }
         val uiState by screenModel.uiState.collectAsState()
         val context = LocalContext.current
 
         LaunchedEffect(uiState.isSuccess) {
             if (uiState.isSuccess) {
+                GlobalScope.launch {
+                    PickupResultBus.emit(PickupResult.Success)
+                }
                 navigator.pop()
             }
         }
@@ -117,7 +144,7 @@ data class SubmissionDetailScreen(
                 navigator.push(MapRoutingScreen(lat, lng, address))
             },
             onFinishPickup = { notes ->
-                screenModel.finishPickup(submission.id, notes)
+                screenModel.completePickup(submission.id, notes)
             },
             snackbarHostState = snackbarHostState
         )
