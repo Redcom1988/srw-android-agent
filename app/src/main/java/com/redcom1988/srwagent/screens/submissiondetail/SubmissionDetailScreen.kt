@@ -34,7 +34,6 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -182,23 +181,24 @@ private fun SubmissionDetailScreenContent(
                     .padding(bottom = 8.dp),
             ) {
                 HorizontalDivider()
-                OutlinedButton(
-                    onClick = {
-                        val lat = submission.submissionLatitude?.toDouble() ?: 0.0
-                        val lng = submission.submissionLongitude?.toDouble() ?: 0.0
-                        val address = submission.submissionAddress
-                        onNavigateToRoute(lat, lng, address)
-                    },
-                    modifier = Modifier.fillMaxWidth(),
-                    enabled = !submission.submissionAddress.isNullOrBlank()
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Language,
-                        contentDescription = null,
-                        modifier = Modifier.size(18.dp)
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                    Text("Navigate to Location")
+                if (submission.status == SubmissionStatus.ASSIGNED) {
+                    Button(
+                        onClick = {
+                            val lat = submission.submissionLatitude?.toDouble() ?: 0.0
+                            val lng = submission.submissionLongitude?.toDouble() ?: 0.0
+                            val address = submission.submissionAddress
+                            onNavigateToRoute(lat, lng, address)
+                        },
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Language,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Navigate to Location")
+                    }
                 }
                 if (submission.status == SubmissionStatus.ASSIGNED) {
                     Button(
@@ -232,6 +232,7 @@ private fun SubmissionDetailScreenContent(
                 .fillMaxSize()
                 .padding(paddingValues)
                 .padding(horizontal = 16.dp)
+                .padding(top = 16.dp)
                 .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {

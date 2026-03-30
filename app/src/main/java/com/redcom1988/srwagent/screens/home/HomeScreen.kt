@@ -238,8 +238,20 @@ object HomeScreen: Screen {
         if (showLogoutDialog) {
             AlertDialog(
                 onDismissRequest = { showLogoutDialog = false },
-                title = { Text("Logout") },
-                text = { Text("Are you sure you want to logout?") },
+                title = {
+                    Text(
+                        text = "Logout",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.SemiBold
+                    )
+                },
+                text = {
+                    Text(
+                        text = "Are you sure you want to log out?",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                },
                 confirmButton = {
                     TextButton(
                         onClick = {
@@ -247,12 +259,14 @@ object HomeScreen: Screen {
                             onClickLogout()
                         }
                     ) {
-                        Text("Logout")
+                        Text("Yes")
                     }
                 },
                 dismissButton = {
-                    TextButton(onClick = { showLogoutDialog = false }) {
-                        Text("Cancel")
+                    TextButton(
+                        onClick = { showLogoutDialog = false }
+                    ) {
+                        Text("No")
                     }
                 }
             )
