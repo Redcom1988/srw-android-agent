@@ -11,11 +11,11 @@ properties.load(project.rootProject.file("local.properties").inputStream())
 val mapsApiKey = properties.getProperty("MAPS_API_KEY") ?: ""
 
 android {
-    namespace = "com.redcom1988"
+    namespace = "com.redcom1988.srwagent"
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.redcom1988"
+        applicationId = "com.redcom1988.srwagent"
         minSdk = 26
         targetSdk = 36
         versionCode = 1
@@ -60,6 +60,7 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.compose.ui)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
